@@ -24,6 +24,13 @@ pip install -r requirements.txt
 python train.py --epochs 1
 ```
 
+## Generate a Data Collection Notebook
+Use the helper script to create a notebook tailored to your biomedical query.
+```bash
+python create_dynamic_notebook.py
+```
+The script will prompt for a topic and number of PubMed results and then create `data_collection_and_kg.ipynb`.
+
 ## Requirements
 - Python 3.8+
 - NVIDIA GPU with CUDA support
