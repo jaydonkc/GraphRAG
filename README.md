@@ -1,43 +1,38 @@
-# GraphRAG: Graph-Based Retrieval-Augmented Generation for Biomedical Knowledge Access
+# GraphRAG: Graph-Based Retrieval-Augmented Generation for Biomedical Knowledge
 
-GraphRAG is an open-source framework that combines a knowledge graph with retrieval-augmented generation to improve large language model (LLM) outputs on complex biomedical queries. The project is built for the PSC/CMU/Pitt Open Hackathon and demonstrates how NVIDIA GPUs can accelerate biomedical data processing and language model workflows.
+GraphRAG combines a biomedical knowledge graph with retrieval-augmented generation to answer complex scientific questions. The project demonstrates a lightweight implementation using Python, Neo4j and the OpenAI API.
 
 ## Project Goals
-- Leverage NVIDIA GPU acceleration for graph-based retrieval and LLM inference
-- Provide a reproducible example of retrieval-augmented generation using biomedical datasets
-- Offer a foundation for researchers to extend and optimize for large-scale knowledge graphs
+- Leverage GPU acceleration for graph-based retrieval and LLM inference.
+- Provide reproducible examples of graph construction and querying for biomedical datasets.
+- Offer a foundation for researchers to extend and optimize large-scale knowledge graphs.
 
 ## Getting Started
 1. **Clone the repository**
-```bash
-git clone <repo-url>
-cd PSC-CMU-Pitt-Hackathon
-```
+   ```bash
+   git clone <repo-url>
+   cd PSC-CMU-Pitt-Hackathon
+   ```
+2. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. **Run the demo notebook**
+   ```bash
+   jupyter notebook notebooks/GraphRAG_demo.ipynb
+   ```
 
-2. **Install dependencies** (requires CUDA-enabled GPU)
-```bash
-pip install -r requirements.txt
-```
+The notebook shows how to collect PubMed data, load it into Neo4j and query it via the GraphReader agent.
 
-3. **Run the example**
-```bash
-python train.py --epochs 1
-```
-
-## Generate a Data Collection Notebook
-Use the helper script to create a notebook tailored to your biomedical query.
-```bash
-python create_dynamic_notebook.py
-```
-The script will prompt for a topic, your email address for the PubMed API, and the number of PubMed results. It then creates `data_collection_and_kg.ipynb`.
+## Scripts
+- `graphrag_data_pipeline.py` – retrieves documents from PubMed, extracts entities with spaCy and loads them as nodes and relationships into Neo4j.
+- `graphreader_agent.py` – a minimal multi-step reasoning agent that uses an LLM to formulate a plan, select nodes and produce an answer.
+- `create_dynamic_notebook.py` – utility for generating a custom data collection notebook.
 
 ## Requirements
 - Python 3.8+
-- NVIDIA GPU with CUDA support
-- PyTorch with CUDA
-- PyTorch Geometric (for graph processing)
+- Neo4j running locally
+- OpenAI API key (for LLM calls)
 
 ## License
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
-
-
