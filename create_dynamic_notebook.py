@@ -1,15 +1,15 @@
 import nbformat as nbf
 from nbformat.v4 import new_notebook, new_markdown_cell, new_code_cell
 
-def generate_notebook(query: str, retmax: int) -> nbf.NotebookNode:
+def generate_notebook(query: str, retmax: int, email: str) -> nbf.NotebookNode:
     nb = new_notebook()
     cells = []
     cells.append(new_markdown_cell(f"# Data Collection & Knowledge Graph\nThis notebook was auto-generated for **{query}**."))
     cells.append(new_code_cell(f"user_query = \"{query}\"\nretmax = {retmax}"))
     cells.append(new_markdown_cell("## Retrieve Data from PubMed"))
-    cells.append(new_code_cell("""from Bio import Entrez
+    cells.append(new_code_cell(f"""from Bio import Entrez
 
-Entrez.email = 'your.email@example.com'
+Entrez.email = '{email}'
 handle = Entrez.esearch(db='pubmed', term=user_query, retmax=retmax)
 record = Entrez.read(handle)
 pubmed_ids = record['IdList']
@@ -49,11 +49,12 @@ with driver.session() as session:
 def main():
     query = input('Enter the biomedical subject or topic: ')
     depth = input('Number of results to fetch from PubMed (default 100): ')
+    email = input('Enter your email address (required for PubMed API): ')
     try:
         retmax = int(depth)
     except ValueError:
         retmax = 100
-    nb = generate_notebook(query, retmax)
+    nb = generate_notebook(query, retmax, email)
     fname = 'data_collection_and_kg.ipynb'
     with open(fname, 'w') as f:
         nbf.write(nb, f)

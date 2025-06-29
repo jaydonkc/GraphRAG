@@ -29,7 +29,7 @@ Use the helper script to create a notebook tailored to your biomedical query.
 ```bash
 python create_dynamic_notebook.py
 ```
-The script will prompt for a topic and number of PubMed results and then create `data_collection_and_kg.ipynb`.
+The script will prompt for a topic, your email address for the PubMed API, and the number of PubMed results. It then creates `data_collection_and_kg.ipynb`.
 
 ## Requirements
 - Python 3.8+
