@@ -2,3 +2,11 @@ torch>=2.0
 torch-geometric
 networkx
 
+nbformat
+nbconvert
+biopython
+requests
+beautifulsoup4
+pronto
+neo4j
+spacy
