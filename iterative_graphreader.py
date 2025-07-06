@@ -1,4 +1,3 @@
-"""Iterative graph reading agent extracted from graphreader.ipynb."""
 
 import networkx as nx
 from typing import List, Dict, Any, Optional, Set
