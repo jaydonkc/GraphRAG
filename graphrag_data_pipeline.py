@@ -7,6 +7,7 @@ import argparse
 import logging
 from dataclasses import dataclass
 from typing import Iterable, List, Tuple
+import networkx as nx
 
 from Bio import Entrez
 from neo4j import GraphDatabase
@@ -116,8 +117,30 @@ def load_to_graph(driver, docs: List[PubMedResult], nlp) -> None:
                         "MATCH (k:KeyElement {text: $text, label: $label}), (c:Chunk {id: $cid})\nMERGE (c)-[:HAS_KEY_ELEMENT]->(k)",
                         text=ent_text,
                         label=ent_label,
-                        cid=chunk_id,
-                    )
+                    cid=chunk_id,
+                )
+
+
+def export_to_gml(driver, output_path: str) -> None:
+    """Export the Neo4j graph to a GML file for use with NetworkX."""
+    g = nx.Graph()
+    with driver.session() as session:
+        for record in session.run(
+            "MATCH (n) RETURN id(n) AS id, labels(n) AS labels, properties(n) AS props"
+        ):
+            g.add_node(record["id"], labels=record["labels"], **record["props"])
+
+        for record in session.run(
+            "MATCH (n)-[r]->(m) RETURN id(n) AS sid, id(m) AS tid, type(r) AS typ, properties(r) AS props"
+        ):
+            g.add_edge(
+                record["sid"],
+                record["tid"],
+                type=record["typ"],
+                **record["props"],
+            )
+    nx.write_gml(g, output_path)
+    logger.info("Graph exported to %s", output_path)
 
 
 def main():
@@ -128,12 +151,14 @@ def main():
     parser.add_argument("--neo4j", default="bolt://localhost:7687")
     parser.add_argument("--user", default="neo4j")
     parser.add_argument("--password", default="password")
+    parser.add_argument("--gml-output", default="graph_dump.gml", help="Export graph to this GML file")
     args = parser.parse_args()
 
     nlp = spacy.load("en_core_web_sm")
     docs = fetch_pubmed(args.query, args.email, args.retmax)
     driver = connect_neo4j(args.neo4j, args.user, args.password)
     load_to_graph(driver, docs, nlp)
+    export_to_gml(driver, args.gml_output)
     logger.info("Pipeline complete")
 
 
