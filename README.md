@@ -22,11 +22,14 @@ GraphRAG combines a biomedical knowledge graph with retrieval-augmented generati
    jupyter notebook notebooks/GraphRAG_demo.ipynb
    ```
 
-The notebook shows how to collect PubMed data, load it into Neo4j and query it via the GraphReader agent.
+The notebook now exports the Neo4j graph to a GML file and uses the
+`IterativeKnowledgeGraphAgent` implemented in `graphreader.ipynb` (and
+available as `iterative_graphreader.py`) to explore the graph.
 
 ## Scripts
 - `graphrag_data_pipeline.py` – retrieves documents from PubMed, extracts entities with spaCy and loads them as nodes and relationships into Neo4j.
 - `graphreader_agent.py` – a minimal multi-step reasoning agent that uses an LLM to formulate a plan, select nodes and produce an answer.
+- `iterative_graphreader.py` – module generated from `graphreader.ipynb` providing the `IterativeKnowledgeGraphAgent`.
 - `create_dynamic_notebook.py` – utility for generating a custom data collection notebook.
 
 ## Requirements
