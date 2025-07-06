@@ -14,17 +14,17 @@ from neo4j import GraphDatabase
 import spacy
 from spacy.tokens import Doc
 
-from langchain_community.graphs.graph_document import GraphDocument
-from langchain_core.documents import Document
+# from langchain_community.graphs.graph_document import GraphDocument
+# from langchain_core.documents import Document
 from retry import retry
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
-from prompts import *
-import llm
+# from prompts import *
+# import llm
 
-from vllm_client import VLLMClient
+# from vllm_client import VLLMClient
 
-client = VLLMClient(schema=None)
+# client = VLLMClient(schema=None)
 
 
 logging.basicConfig(level=logging.INFO)
@@ -57,9 +57,9 @@ def fetch_pubmed(query: str, email: str, retmax: int = 20) -> List[PubMedResult]
     """Fetch PubMed abstracts via Entrez."""
     Entrez.email = email
     logger.info("Searching PubMed for '%s'", query)
-    handle = Entrez.esearch(db="pubmed", term=query, retmax=retmax)
+    handle = Entrez.esearch(db="pubmed", term=query, retmax=retmax, retmode="xml")
     record = Entrez.read(handle)
-    ids = record["IdList"]
+    ids = record["IdList"] if isinstance(record, dict) and "IdList" in record else []
     results: List[PubMedResult] = []
     for pmid in ids:
         fetch = Entrez.efetch(db="pubmed", id=pmid, rettype="abstract", retmode="text")
