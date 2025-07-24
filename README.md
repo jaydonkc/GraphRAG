@@ -1,41 +1,36 @@
-# GraphRAG: Graph-Based Retrieval-Augmented Generation for Biomedical Knowledge
+# PSC-CMU-PITT-HACKATHON GraphRAG Project
 
-GraphRAG combines a biomedical knowledge graph with retrieval-augmented generation to answer complex scientific questions. The project demonstrates a lightweight implementation using Python, Neo4j and the OpenAI API.
-
-## Project Goals
-- Leverage GPU acceleration for graph-based retrieval and LLM inference.
-- Provide reproducible examples of graph construction and querying for biomedical datasets.
-- Offer a foundation for researchers to extend and optimize large-scale knowledge graphs.
-
-## Getting Started
-1. **Clone the repository**
-   ```bash
-   git clone <repo-url>
-   cd PSC-CMU-Pitt-Hackathon
-   ```
-2. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. **Run the demo notebook**
-   ```bash
-   jupyter notebook notebooks/GraphRAG_demo.ipynb
-   ```
-
-The notebook now exports the Neo4j graph to a GML file and uses the
-`IterativeKnowledgeGraphAgent` implemented in `graphreader.ipynb` (and
-available as `iterative_graphreader.py`) to explore the graph.
-
-## Scripts
-- `graphrag_data_pipeline.py` – retrieves documents from PubMed, extracts entities with spaCy and loads them as nodes and relationships into Neo4j.
-- `graphreader_agent.py` – a minimal multi-step reasoning agent that uses an LLM to formulate a plan, select nodes and produce an answer.
-- `iterative_graphreader.py` – module generated from `graphreader.ipynb` providing the `IterativeKnowledgeGraphAgent`.
-- `create_dynamic_notebook.py` – utility for generating a custom data collection notebook.
+This repository demonstrates a simple Graph Retrieval Augmented Generation (RAG) workflow. It contains scripts to build a small knowledge graph from text, query it using a language model served through [vLLM](https://github.com/vllm-project/vllm), and explore the results in a Jupyter notebook.
 
 ## Requirements
-- Python 3.8+
-- Neo4j running locally
-- OpenAI API key (for LLM calls)
 
-## License
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+- **Python 3.8+**
+- **CUDA-enabled GPU** (required by vLLM)
+- All Python dependencies listed in `requirements.txt`
+
+Install the Python packages with:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Starting the vLLM Server
+
+The `run_vllm.sh` script launches a vLLM API server using the `Qwen/Qwen2.5-7B-Instruct-AWQ` model. Make sure your GPU drivers are configured properly before starting the server. You can optionally enable FlashInfer by setting `VLLM_ATTENTION_BACKEND=FLASHINFER` before running the script.
+
+```bash
+bash run_vllm.sh
+```
+
+By default the server listens on port `8000`.
+
+## Running the Notebook
+
+The `docGraphRAG.ipynb` notebook walks through constructing a graph from text and interacting with the vLLM server. Start a Jupyter environment and open the notebook:
+
+```bash
+jupyter notebook docGraphRAG.ipynb
+```
+
+Follow the cells in order to load data, build the graph and generate answers.
+

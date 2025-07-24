@@ -1,3 +1,22 @@
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+
+# Virtual Environment
+.venv/
+env/
+venv/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# VSCode
+.vscode/
+
+# OS files
+.DS_Store
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
 
