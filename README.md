@@ -1,4 +1,4 @@
-# PSC-CMU-PITT-HACKATHON GraphRAG Project
+# GraphRAG
 
 This repository demonstrates a Graph Retrieval Augmented Generation (RAG) workflow that combines knowledge graph construction with iterative question answering. The system fetches scientific literature from multiple sources, builds a knowledge graph, and uses an intelligent agent to explore and answer complex questions.
 
@@ -211,24 +211,6 @@ The benchmark suite provides:
 - **Optimization Targets**: Clear areas for hackathon improvements (GPU utilization, parallel processing)
 - **Baseline Measurements**: Before/after comparison capabilities for optimization efforts
 
-```
-PSC-CMU-PITT HACKATHON - GRAPHRAG PERFORMANCE BENCHMARK
-SYSTEM INFORMATION
-CPU cores: 16
-RAM: 32.0 GB
-GPU detected: NVIDIA GeForce RTX 5060 Ti (15.9GB)
-
-Benchmarking Knowledge Graph Construction (8 texts)
-Graph built: 45.12s
-120 nodes, 158 edges
-2.7 nodes/sec
-
-HACKATHON OPTIMIZATION TARGETS:
-   • GPU memory utilization optimization
-   • Parallel document processing pipeline
-   • Vectorized embedding generation
-```
-
 ### **Graph Structure**
 
 The knowledge graph contains:
@@ -265,3 +247,9 @@ You can modify `run_vllm.sh` to:
 
 - Change model parameters (memory utilization, max sequences, etc.)
 - Use different model variants
+
+
+### Future Improvements
+   • GPU memory utilization optimization
+   • Parallel document processing pipeline
+   • Vectorized embedding generation
