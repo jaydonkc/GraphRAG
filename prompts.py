@@ -369,3 +369,31 @@ def summarize(output, var1, var2, definitions, debug=False):
     if debug:
         print(prompt)
     return prompt
+
+# ----------------------
+# GraphReader‑style prompts for kg_builder.py
+# ----------------------
+
+# Prompt to extract atomic facts from a text chunk
+atomic_fact_prompt = (
+    "# Instruction: Extract atomic facts\n"
+    "From the following text chunk, pull out every minimal, self‑contained statement (“atomic fact”).\n"
+    "Do NOT add commentary—just return JSON.\n"
+    "Output format (exactly):\n"
+    "  {{\"atomic_facts\": [\"fact1\",\"fact2\",...]}}\n\n"
+    "-- TEXT CHUNK --\n"
+    "{chunk}\n\n"
+    "-- JSON OUTPUT --"
+)
+
+# Prompt to extract key elements (entities/concepts) from one atomic fact
+key_element_prompt = (
+    "# Instruction: Extract key elements\n"
+    "Given the following atomic fact, identify each entity or concept mentioned.\n"
+    "Do NOT add commentary—just return JSON.\n"
+    "Output format (exactly):\n"
+    "  {{\"key_elements\": [\"entity1\",\"entity2\",...]}}\n\n"
+    "-- ATOMIC FACT --\n"
+    "{fact}\n\n"
+    "-- JSON OUTPUT --"
+)

@@ -1,8 +1,6 @@
 import requests
 import json
 import re
-# import msgspec
-from vllm import SamplingParams
 from typing import Optional, Dict, Any
 from pydantic import ValidationError
 
@@ -163,11 +161,13 @@ class VLLMClient:
             raise ValueError("Invalid response format")
         
         # The VLLM server returns the full text including the prompt
-        # We need to extract just the completion part after the final assistant tag
+        # We need to extract just the completion part
         full_text = data["text"][0]
         
         if not self.schema:
-            # For non-schema responses, try to extract text after the last assistant tag
+            # For non-schema responses, try to extract text after common prompt patterns
+            
+            # Method 1: Look for chat template tags (for chat mode)
             if "<|im_start|>assistant" in full_text:
                 assistant_parts = full_text.split("<|im_start|>assistant")
                 if len(assistant_parts) > 1:
@@ -176,10 +176,28 @@ class VLLMClient:
                     if "<|im_end|>" in response_text:
                         response_text = response_text.split("<|im_end|>")[0].strip()
                     return response_text
+            
+            # Method 2: Look for specific prompt end markers (for completion mode)
+            elif "-- JSON OUTPUT --" in full_text:
+                # Split on the marker and take everything after it
+                parts = full_text.split("-- JSON OUTPUT --")
+                if len(parts) > 1:
+                    response_text = parts[-1].strip()
+                    return response_text
+            
+            # Method 3: Look for other common patterns
+            elif "Output:" in full_text:
+                parts = full_text.split("Output:")
+                if len(parts) > 1:
+                    response_text = parts[-1].strip()
+                    return response_text
+            
             return full_text
             
-        # For schema responses, extract and parse JSON
-        # Look for JSON content after the assistant tag
+        # For schema responses, extract and parse JSON using the same logic
+        response_text = full_text
+        
+        # Method 1: Look for chat template tags (for chat mode)
         if "<|im_start|>assistant" in full_text:
             assistant_parts = full_text.split("<|im_start|>assistant")
             if len(assistant_parts) > 1:
@@ -187,10 +205,18 @@ class VLLMClient:
                 # Remove any trailing tags
                 if "<|im_end|>" in response_text:
                     response_text = response_text.split("<|im_end|>")[0].strip()
-            else:
-                response_text = full_text
-        else:
-            response_text = full_text
+        
+        # Method 2: Look for JSON output markers (for completion mode)
+        elif "-- JSON OUTPUT --" in full_text:
+            parts = full_text.split("-- JSON OUTPUT --")
+            if len(parts) > 1:
+                response_text = parts[-1].strip()
+        
+        # Method 3: Look for other common patterns
+        elif "Output:" in full_text:
+            parts = full_text.split("Output:")
+            if len(parts) > 1:
+                response_text = parts[-1].strip()
         
         # Clean up the response text - remove markdown code blocks and extract JSON
         cleaned_text = response_text.strip()
