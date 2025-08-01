@@ -45,8 +45,36 @@ This is required by NCBI's Entrez API for responsible usage and is necessary for
 - **`prompts.py`**: Prompt templates for various LLM tasks
 - **`kg_question.py`**: Question processing utilities
 - **`test_graphRAG_contribution.py`**: Validation script to test knowledge graph contribution
+- **`performance_benchmark.py`**: Performance measurement and bottleneck analysis script
 - **`variable_definitions/`**: Entity definition schemas (default and ontological)
 - **`graphRAG_demo.ipynb`**: Interactive demonstration notebook
+
+## Performance Optimization Opportunities
+
+This project presents several areas for acceleration suitable for hackathon optimization:
+
+### Current Bottlenecks
+
+- **Knowledge Graph Construction**: Entity/relation extraction across large document collections (sequential processing)
+- **Embedding Generation**: Batch processing of semantic embeddings for graph nodes
+- **Graph Traversal**: Iterative exploration and similarity searches during question answering
+- **Parallel Processing**: Could improve inference speeds
+- **Memory Management**: Inefficient GPU memory utilization during concurrent operations
+
+### Optimization Targets
+
+- **Batch Processing**: Vectorized operations for entity extraction and embedding generation
+- **Parallel Graph Construction**: Increasing graph scale and complexity
+- **Efficient Vector Search**: GPU-accelerated similarity computations for graph exploration
+- **Pipeline Parallelization**: Overlapping data retrieval, processing, and inference stages
+- **Model Optimization**: Quantization improvements and memory-efficient attention mechanisms
+
+### Scalability Goals
+
+- Process 100+ research papers simultaneously (currently handles ~10-20)
+- Build knowledge graphs with more nodes and embeddings in reasonable time
+- Real-time question answering over large knowledge bases
+- Handle multiple concurrent users/queries
 
 ## Starting the vLLM Server
 
@@ -150,6 +178,56 @@ The test provides detailed analysis including:
 - Source node examination and content verification
 - Relevance scoring of extracted information
 - Recommendations for improving graph contribution
+
+### 5. Performance Benchmarking
+
+Measure system performance and identify optimization opportunities using the comprehensive benchmark suite:
+
+```bash
+# Run full benchmark suite
+python3 performance_benchmark.py
+
+# Quick benchmark with reduced parameters
+python3 performance_benchmark.py --quick
+
+# Test specific components
+python3 performance_benchmark.py --component data    # Data retrieval only
+python3 performance_benchmark.py --component kg     # Knowledge graph construction
+python3 performance_benchmark.py --component qa     # Question answering
+python3 performance_benchmark.py --component concurrent  # Parallel processing
+
+# Test GPU monitoring
+python3 performance_benchmark.py --test-gpu
+
+# Debug mode with system information
+python3 performance_benchmark.py --debug
+```
+
+The benchmark suite provides:
+
+- **System Resource Monitoring**: Real-time CPU, memory, and GPU utilization tracking
+- **Performance Metrics**: Throughput measurements (nodes/sec, papers/sec, chars/sec)
+- **Bottleneck Identification**: Pinpoints sequential processing and memory inefficiencies
+- **Optimization Targets**: Clear areas for hackathon improvements (GPU utilization, parallel processing)
+- **Baseline Measurements**: Before/after comparison capabilities for optimization efforts
+
+```
+PSC-CMU-PITT HACKATHON - GRAPHRAG PERFORMANCE BENCHMARK
+SYSTEM INFORMATION
+CPU cores: 16
+RAM: 32.0 GB
+GPU detected: NVIDIA GeForce RTX 5060 Ti (15.9GB)
+
+Benchmarking Knowledge Graph Construction (8 texts)
+Graph built: 45.12s
+120 nodes, 158 edges
+2.7 nodes/sec
+
+HACKATHON OPTIMIZATION TARGETS:
+   • GPU memory utilization optimization
+   • Parallel document processing pipeline
+   • Vectorized embedding generation
+```
 
 ### **Graph Structure**
 

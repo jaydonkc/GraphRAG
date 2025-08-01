@@ -3,7 +3,7 @@ import requests
 from Bio import Entrez
 from typing import List, Dict
 
-Entrez.email = "your_email@example.com"  # Replace with your email
+Entrez.email = "test@example.com"  # Replace with your email
 
 def fetch_pubmed_abstracts(query: str, retmax: int = 5) -> str:
     with Entrez.esearch(db="pubmed", term=query, retmax=retmax) as handle:
